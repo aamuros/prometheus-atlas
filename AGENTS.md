@@ -1,4 +1,24 @@
-# Coding agent instructions
+# Atlas coding agent instructions
+
+Atlas is Prometheus Co.'s independent engineering discovery and reuse platform,
+generated from `aamuros/prometheus-web-template`. Change this repository only;
+do not modify the original template.
+
+## Product scope
+
+- Keep the experience search-first: Discover → Evaluate → Prepare → Adapt →
+  Verify → Record. Prioritize finding implementations over administrative dashboards.
+- Projects are applications; features are general capabilities; implementations
+  tie a feature to a project, exact commit, and source paths. Future reuse records
+  connect a source implementation to a destination project and its adaptation result.
+- Milestone 1 is read-only discovery. Fictional fixtures live only in
+  `src/features/discovery/sample-catalog.ts`, behind `loadCatalog`. Keep them easy
+  to remove, clearly labeled, and separate from claims of verified company code.
+- The authentication foundation adds Cloudflare Access verification and Neon
+  PostgreSQL/Drizzle membership only. Keep catalog persistence, real client
+  information, autonomous agents, and GitHub integration out of this phase.
+  Do not add password authentication or public signup. Follow
+  [authentication setup](docs/authentication-setup.md) for operator provisioning.
 
 Read [architecture](docs/architecture.md) and [conventions](docs/conventions.md)
 before changing application behavior. Read only task-relevant files and make
@@ -15,9 +35,8 @@ small, focused changes; avoid unrelated refactoring.
   only when reuse or testable behavior warrants it.
 - Use conventional functions and React components, type-only imports, semantic
   HTML, accessible controls, and existing UI tokens. Keep strict checks enabled.
-- Do not add a monorepo, plugin/installer system, scaffolding CLI, speculative
-  layers, or Atlas integration. Authentication and persistence belong in a
-  generated application when required.
+- Do not add a monorepo, plugin/installer system, scaffolding CLI, microservices,
+  or speculative layers. Atlas remains one independent application.
 
 ## Dependencies and security
 

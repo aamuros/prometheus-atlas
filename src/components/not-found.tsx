@@ -7,6 +7,7 @@ export function NotFound() {
       <p className="text-muted-foreground">This page does not exist.</p>
       <Link
         to="/"
+        search={{ q: '', feature: '' }}
         className="inline-block text-sm underline underline-offset-4"
       >
         Return home

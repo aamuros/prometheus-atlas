@@ -1,8 +1,8 @@
 {
-  "name": "web-application",
+  "name": "prometheus-atlas",
   "version": "0.0.0",
   "private": true,
-  "description": "A minimal React and Hono application on Cloudflare Workers.",
+  "description": "Prometheus engineering discovery and software reuse platform.",
   "type": "module",
   "license": "UNLICENSED",
   "packageManager": "pnpm@12.10.1",
@@ -20,12 +20,17 @@
     "test:watch": "vitest",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build",
     "preview": "pnpm build && vite preview --host 127.0.0.1",
-    "deploy": "pnpm check && wrangler deploy"
+    "deploy": "pnpm check && wrangler deploy",
+    "db:generate": "node --env-file-if-exists=.env.db.local node_modules/drizzle-kit/bin.cjs generate",
+    "db:migrate": "node --env-file=.env.db.local node_modules/drizzle-kit/bin.cjs migrate"
   },
   "dependencies": {
+    "@neondatabase/serverless": "1.2.0",
     "@tanstack/react-router": "1.170.41",
     "clsx": "2.1.1",
+    "drizzle-orm": "0.45.3",
     "hono": "4.13.13",
+    "jose": "6.2.12",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "tailwind-merge": "3.7.0"
@@ -42,6 +47,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.2",
+    "drizzle-kit": "0.31.11",
     "eslint": "10.12.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.7",

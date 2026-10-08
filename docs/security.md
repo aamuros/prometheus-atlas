@@ -1,10 +1,11 @@
 # Production security checklist
 
-This starter is unauthenticated and has no database. Its headers and safe error
-responses are useful defaults, but each generated application must implement
-and verify these safeguards before processing private business information.
-Choose controls for the application's data and access model; the template does
-not install security services or frameworks.
+Atlas now implements Access JWT verification, active database memberships,
+server-side roles, and Neon HTTP/Drizzle. See [authentication setup](authentication-setup.md).
+These code controls and tests do not establish live edge protection, least-privilege
+database credentials, recovery, or deployment security. Complete and verify this
+checklist before processing private business information; unchecked items require
+operational evidence, not just implementation.
 
 - [ ] **Authentication:** identify permitted users, protect entry points, and
       provide account removal and session revocation. Use a maintained provider

@@ -47,6 +47,12 @@ When upgrading Node, TypeScript, Vite, Cloudflare tooling, or test infrastructur
   Remove an obsolete override, regenerate the lockfile, and audit again. The
   current Miniflare version pins `sharp` to `0.35.4`, so the `0.35.5` override
   remains necessary.
+
+Drizzle Kit's legacy `@esbuild-kit/core-utils` loader pins vulnerable `esbuild`
+`0.18.20`. A narrowly scoped override uses `0.25.12`, verified with migration
+generation. Keep it until the loader is removed or upgraded; no new dependency
+build scripts were allowlisted. Drizzle Kit's deprecated loader is tooling only.
+
 - Run a frozen clean install, `pnpm check`, and the audit. For runtime or build
   tooling updates, also run the local preview smoke procedure in
   [verification](verification.md). Commit package metadata and the lockfile

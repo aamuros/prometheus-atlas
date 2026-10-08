@@ -5,6 +5,8 @@ strictPeerDependencies: true
 # Remove after upstream resolves >=0.35.5 and the audit remains clean.
 overrides:
   sharp: 0.35.5
+  # Drizzle Kit's legacy TS loader pins esbuild below its patched release.
+  '@esbuild-kit/core-utils>esbuild': 0.25.12
 allowBuilds:
   esbuild: true
   workerd: true

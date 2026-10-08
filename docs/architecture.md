@@ -14,9 +14,9 @@ The health request uses same-origin `fetch` and checks the small response shape 
 
 ## Routing and UI
 
-TanStack Router uses its supported code-based route tree. With two routes, explicit assembly avoids a generator, generated source, and another development dependency. The library recommends file-based routing for larger applications; migrate when route count makes it worthwhile. Route views live under `src/routes/`, and `src/app/router.ts` assembles the tree. The root route owns layout, pending, not-found, and safe error views. Route errors hide internal exception details.
+TanStack Router uses its supported code-based route tree. With a small route tree, explicit assembly avoids a generator, generated source, and another development dependency. The library recommends file-based routing for larger applications; migrate when route count makes it worthwhile. Route views live under `src/routes/`, and `src/app/router.ts` assembles the tree. The root route owns layout, pending, not-found, and safe error views. Route errors hide internal exception details.
 
-The home loader calls the real health endpoint, demonstrating the integration without adding a client-side cache library. For richer server state, TanStack Query is the approved default, but it is not needed for a single request.
+Atlas has Discover, Project Directory, Project Details, and Feature Catalog routes. The Discover loader calls the real health endpoint alongside the sample catalog loader, preserving the frontend/API integration without a client-side cache library. Other catalog routes load only sample data. Search and capability filters live in the Discover URL. Fictional fixtures are isolated in `src/features/discovery/sample-catalog.ts` behind `loadCatalog`; they contain no validated company implementations. For richer server state, TanStack Query is the approved default when a catalog API is introduced.
 
 Tailwind 4 uses its Vite plugin and CSS-first `@theme` configuration. `components.json`, semantic CSS tokens, and `cn` provide the shadcn/ui foundation. The supported `new-york` style uses the established `clsx`/`tailwind-merge` utility. Add individual components only as needed, review their installed dependencies and styles, and verify the production CSP. There is no preinstalled component collection, icon pack, animation library, or dark-mode switch.
 
@@ -27,6 +27,25 @@ When a feature is introduced, place its UI, hooks, and browser helpers in `src/f
 Handlers should parse/validate input, enforce access, invoke business logic, and translate results into HTTP responses. Extract functions or services when the logic benefits from independent tests or reuse. Add repositories only when persistence access genuinely needs an abstraction. Do not introduce layers, dependency injection, or universal business models in advance.
 
 ## API and security defaults
+
+Cloudflare Access with GitHub protects the entire deployed Worker and its static
+assets. Hono independently verifies Access JWTs with `jose` because Static Assets
+does not forward `ctx.access`. `worker/features/auth/` resolves active Atlas
+memberships and enforces `admin`/`developer` roles. `GET /api/me` provides the
+minimal verified profile; `GET /api/admin/members` is admin-only. Health remains
+a nonsensitive liveness endpoint behind the deployed edge policy. New data
+routes must apply identity and membership middleware, plus role checks as needed.
+
+`worker/db/` owns the Neon HTTP connection and Drizzle membership schema. Only
+issuer + subject identifies a member; emails and JWT role claims never grant
+membership or privileges. Migration/provisioning credentials stay outside the
+runtime, whose database role is read-only. `drizzle.config.ts` and `drizzle/`
+provide explicit operator-run migrations. See [authentication setup](authentication-setup.md).
+
+The root route loads the current member and displays safe authentication/denial
+states. Frontend checks do not authorize APIs. Local Vite middleware serves a
+fixed fictional profile only during development; preview/build use the real
+Worker. No production binding disables authentication.
 
 Hono returns JSON, a minimal uncached health response, 404 for unknown routes, 405 for unsupported health methods, and safe error envelopes. `HTTPException` status codes are preserved while their messages are hidden. A generic exception becomes a 500 response. Request logs include only method, status, and duration, avoiding URLs, query strings, headers, bodies, and exception messages that may contain protected information. Add controlled diagnostics and request correlation when needed.
 
@@ -41,14 +60,14 @@ Install and configure approved technologies in the generated application, follow
 | Server state                | TanStack Query; use query keys, invalidation, and loader integration deliberately.                                                                                                                    |
 | Forms and validation        | React Hook Form and Zod when warranted; validate again on the server.                                                                                                                                 |
 | Relational storage          | PostgreSQL, Drizzle ORM/Kit, and Neon; choose a Workers-compatible HTTP or supported connection strategy, define migrations, and protect credentials. Keep migrations separate from request handling. |
-| Authentication              | Better Auth; confirm its Worker runtime and database adapter requirements, use secure server-managed sessions, and plan CSRF/session handling.                                                        |
+| Authentication              | Cloudflare Access + GitHub, verified JWTs in Hono; no app OAuth, passwords, or custom sessions.                                                                                                       |
 | Authorization               | Enforce permissions in every relevant API operation; hiding UI controls is insufficient. Add application-specific RBAC only when needed.                                                              |
 | Files                       | Cloudflare R2 bindings; validate uploads and enforce access before issuing URLs or returning objects.                                                                                                 |
 | Background work             | Cloudflare Cron/Queues; add handlers, typed bindings, retry and idempotency behavior when a real job exists.                                                                                          |
 | Browser regression coverage | Playwright when meaningful user workflows exist; keep unit tests credential-free.                                                                                                                     |
 | Observability and email     | Sentry and an appropriate email provider; redact protected data, keep keys server-side, and assess operating cost.                                                                                    |
 
-Applications handling protected information also need suitable logging, backups with tested restore, security validation, and a deployment access model. These are application-specific requirements, not capabilities supplied by this unauthenticated template.
+Applications handling protected information also need suitable logging, backups with tested restore, security validation, and a verified deployment access model. Repository authentication code alone does not establish these external safeguards.
 
 ## Official guidance checked
 

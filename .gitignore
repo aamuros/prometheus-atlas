@@ -5,6 +5,7 @@ coverage/
 .pnpm-store/
 .env*
 !.env.example
+!.env.db.example
 .dev.vars*
 !.dev.vars.example
 *.tsbuildinfo

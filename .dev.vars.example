@@ -1,3 +1,7 @@
-# No Worker secrets are required for local development.
-# Add service secrets here only when needed, then copy to .dev.vars (ignored).
-# Production secrets must be configured with Wrangler, never committed.
+# pnpm dev uses a fictional profile in Vite only; the Worker always verifies JWTs.
+# For real local Worker API requests or pnpm preview, copy to .dev.vars (ignored)
+# and obtain development-only bindings from an Atlas administrator.
+CF_ACCESS_TEAM_DOMAIN=https://YOUR-TEAM.cloudflareaccess.com
+CF_ACCESS_AUD=YOUR-64-CHARACTER-APPLICATION-AUDIENCE
+DATABASE_URL=postgresql://USER:PASSWORD@DEV-ENDPOINT-pooler.neon.tech/atlas?sslmode=require
+# Production DATABASE_URL belongs in Wrangler secrets, never source control.
